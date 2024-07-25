@@ -22,7 +22,7 @@ jobs:
       - name: Build the solution
         run: msbuild $env:SolutionPath /t:rebuild /p:Configuration=Release
 
-      - name: Run headless client tests
+      - name: Run headless client
         run: |
           cd Output
           .\DataNRO.exe

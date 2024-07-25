@@ -131,11 +131,9 @@ namespace DataNRO
         void ReadMapData(MessageReceive message)
         {
             message.ReadByte();
-            MapNames = new string[message.ReadByte()];
-            for (int i = 0; i < MapNames.Length; i++)
-            {
-                MapNames[i] = message.ReadString();
-            }
+            int mapLength = message.ReadByte();
+            for (int i = 0; i < mapLength; i++)
+                Maps.Add(i, message.ReadString());
             NpcTemplates = new NpcTemplate[message.ReadByte()];
             for (int i = 0; i < NpcTemplates.Length; i++)
             {

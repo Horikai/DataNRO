@@ -48,7 +48,7 @@ namespace DataNRO
             session.Disconnect();
             File.WriteAllText("Data.json", JsonConvert.SerializeObject(new
             {
-                GameData.MapNames,
+                GameData.Maps,
                 GameData.NpcTemplates,
                 GameData.MobTemplates,
                 GameData.ItemOptionTemplates,

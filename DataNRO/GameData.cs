@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DataNRO
 {
@@ -49,11 +45,11 @@ namespace DataNRO
             public string moreInfo;
         }
 
-        internal static string[] MapNames { get; set; }
         internal static NpcTemplate[] NpcTemplates { get; set; }
         internal static MobTemplate[] MobTemplates { get; set; }
         internal static ItemOptionTemplate[] ItemOptionTemplates { get; set; }
         internal static NClass[] NClasses { get; set; }
+        internal static Dictionary<int, string> Maps { get; set; } = new Dictionary<int, string>();
         internal static List<ItemTemplate> ItemTemplates { get; set; } = new List<ItemTemplate>();
     }
 }

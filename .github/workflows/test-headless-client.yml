@@ -25,7 +25,7 @@ jobs:
       - name: Run headless client tests
         run: |
           cd Output
-          DataNRO.exe
+          .\DataNRO.exe
         env:
           SERVER: ${{ secrets.server }}
           PORT: ${{ secrets.port }}

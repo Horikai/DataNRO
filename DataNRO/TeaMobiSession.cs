@@ -42,10 +42,8 @@ namespace DataNRO
 
         public void Connect()
         {
-            Console.WriteLine($"Connecting to {Host}:{Port}...");
             tcpClient = new TcpClient();
             tcpClient.Connect(Host, Port);
-            Console.WriteLine("Connected successfully!");
             reader = new BinaryReader(tcpClient.GetStream(), Encoding.UTF8);
             writer = new BinaryWriter(tcpClient.GetStream(), Encoding.UTF8);
             sendThread = new Thread(SendDataThread);

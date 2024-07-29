@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using static System.Collections.Specialized.BitVector32;
 
 namespace DataNRO
 {
@@ -78,7 +79,7 @@ namespace DataNRO
                     if (getKeyComplete && sendMessages.Count > 0)
                     {
                         MessageSend message = sendMessages.Dequeue();
-                        Console.WriteLine($"Send message: {message.Command}, {message.DataLength} bytes");
+                        Console.WriteLine($"[{Host}:{Port}] Send message: {message.Command}, {message.DataLength} bytes");
                         WriteMessageToStream(message);
                     }
                     Thread.Sleep(5);
@@ -96,7 +97,7 @@ namespace DataNRO
                     MessageReceive message = ReadMessageFromStream();
                     if (message == null)
                         break;
-                    Console.WriteLine($"Message received: {message.Command}, {message.DataLength} bytes");
+                    Console.WriteLine($"[{Host}:{Port}] Message received: {message.Command}, {message.DataLength} bytes");
                     if (message.Command == -27)
                         GetKey(message);
                     else
@@ -150,7 +151,7 @@ namespace DataNRO
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error sending message:\r\n{ex}");
+                Console.WriteLine($"[{Host}:{Port}] Error sending message:\r\n{ex}");
                 writer.Flush();
             }
         }

@@ -5,6 +5,9 @@ on:
       DATA:
         description: 'Data'
         required: true
+      PROXY:
+        description: 'Proxy'
+        required: true
 
 jobs:
   build-and-test-headless-client:
@@ -32,6 +35,7 @@ jobs:
           .\DataNRO.exe
         env:
           DATA: ${{ inputs.DATA }}
+          PROXY: ${{ inputs.PROXY }}
       - name: Compress JSON file
         run: Compress-Archive -Path Output\Data -DestinationPath Data.zip
       - name: Upload artifact

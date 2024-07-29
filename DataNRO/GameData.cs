@@ -55,12 +55,12 @@ namespace DataNRO
 
         internal static void Reset()
         {
-            Maps = new Dictionary<int, string>();
             NpcTemplates = null;
             MobTemplates = null;
             ItemOptionTemplates = null;
             NClasses = null;
-            ItemTemplates = null;
+            Maps = new Dictionary<int, string>();
+            ItemTemplates = new List<ItemTemplate>();
         }
     }
 }

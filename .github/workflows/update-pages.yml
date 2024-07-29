@@ -29,6 +29,7 @@ jobs:
           workflow_conclusion: success
           if_no_artifact_found: fail
           allow_forks: false
+          workflow: update-data.yml
           name: DataNRO
           path: Page
       - name: Configure GitHub Pages

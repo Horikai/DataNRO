@@ -34,7 +34,7 @@ namespace DataNRO
                 }
                 catch
                 {
-                    while (!session.IsConnected && retryTimes < 10)
+                    while (!session.IsConnected && retryTimes < 5)
                     {
                         Console.WriteLine();
                         try

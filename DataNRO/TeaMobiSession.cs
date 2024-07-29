@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Starksoft.Net.Proxy;
 using static System.Collections.Specialized.BitVector32;
 
 namespace DataNRO
@@ -46,6 +47,21 @@ namespace DataNRO
         {
             tcpClient = new TcpClient();
             tcpClient.Connect(Host, Port);
+            reader = new BinaryReader(tcpClient.GetStream(), Encoding.UTF8);
+            writer = new BinaryWriter(tcpClient.GetStream(), Encoding.UTF8);
+            sendThread = new Thread(SendDataThread);
+            receiveThread = new Thread(ReceiveDataThread);
+            sendThread.Start();
+            receiveThread.Start();
+            key = null;
+            WriteMessageToStream(new MessageSend(-27));
+        }
+        
+        public void Connect(string proxyHost, ushort proxyPort, string proxyUsername, string proxyPassword, ProxyType proxyType)
+        {
+            ProxyClientFactory proxyClientFactory = new ProxyClientFactory();
+            IProxyClient proxyClient = proxyClientFactory.CreateProxyClient(proxyType, proxyHost, proxyPort, proxyUsername, proxyPassword);
+            tcpClient = proxyClient.CreateConnection(Host, Port);
             reader = new BinaryReader(tcpClient.GetStream(), Encoding.UTF8);
             writer = new BinaryWriter(tcpClient.GetStream(), Encoding.UTF8);
             sendThread = new Thread(SendDataThread);

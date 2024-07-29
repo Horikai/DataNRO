@@ -53,6 +53,15 @@
     <Compile Include="GameData.cs" />
     <Compile Include="IMessageWriter.cs" />
     <Compile Include="ISession.cs" />
+    <Compile Include="StarkSoftProxy\EventArgs\CreateConnectionAsyncCompletedEventArgs.cs" />
+    <Compile Include="StarkSoftProxy\Exceptions\ProxyException.cs" />
+    <Compile Include="StarkSoftProxy\HttpProxyClient.cs" />
+    <Compile Include="StarkSoftProxy\IProxyClient.cs" />
+    <Compile Include="StarkSoftProxy\ProxyClientFactory.cs" />
+    <Compile Include="StarkSoftProxy\Socks4aProxyClient.cs" />
+    <Compile Include="StarkSoftProxy\Socks4ProxyClient.cs" />
+    <Compile Include="StarkSoftProxy\Socks5ProxyClient.cs" />
+    <Compile Include="StarkSoftProxy\Utils.cs" />
     <Compile Include="TeaMobiMessageReceiver.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageReceiver.cs" />

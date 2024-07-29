@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Starksoft.Net.Proxy;
 
 namespace DataNRO
 {
@@ -14,6 +10,7 @@ namespace DataNRO
         ushort Port { get; }
         bool IsConnected { get; }
         void Connect();
+        void Connect(string proxyHost, ushort proxyPort, string proxyUsername, string proxyPassword, ProxyType proxyType);
         void SendMessage(MessageSend message);
         void Disconnect();
     }

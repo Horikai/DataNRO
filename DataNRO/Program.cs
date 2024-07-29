@@ -3,17 +3,20 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using Newtonsoft.Json;
+using Starksoft.Net.Proxy;
 
 namespace DataNRO
 {
     internal class Program
     {
+        static string proxyData = "";
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
             if (!Directory.Exists("Data"))
                 Directory.CreateDirectory("Data");
+            proxyData = Environment.GetEnvironmentVariable("PROXY");
             string[] datas = Environment.GetEnvironmentVariable("DATA").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string data in datas)
                 LoginAndGetData(data);
@@ -37,33 +40,8 @@ namespace DataNRO
                 MessageWriter = new TeaMobiMessageWriter()
             };
             Console.WriteLine($"Connecting to {session.Host}:{session.Port}...");
-            int retryTimes = 0;
-            try
-            {
-                session.Connect();
-            }
-            catch
-            {
-                while (!session.IsConnected && retryTimes < 5)
-                {
-                    Console.WriteLine();
-                    try
-                    {
-                        session.Connect();
-                    }
-                    catch
-                    {
-                        Console.WriteLine($"Retry {retryTimes + 1}...");
-                        Thread.Sleep(1000);
-                    }
-                    retryTimes++;
-                }
-                if (!session.IsConnected)
-                {
-                    Console.WriteLine("Failed to connect!");
-                    return;
-                }
-            }
+            if (!TryConnect(session))
+                return;
             Console.WriteLine("Connected successfully!");
             IMessageWriter writer = session.MessageWriter;
             writer.SetClientType();
@@ -104,6 +82,82 @@ namespace DataNRO
             File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NClasses)}.json", JsonConvert.SerializeObject(GameData.NClasses, formatting));
             File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.ItemTemplates)}.json", JsonConvert.SerializeObject(GameData.ItemTemplates, formatting));
             Thread.Sleep(3000);
+        }
+
+        static bool TryConnect(ISession session)
+        {
+            int retryTimes = 0;
+            try
+            {
+                session.Connect();
+            }
+            catch
+            {
+                while (!session.IsConnected && retryTimes < 3)
+                {
+                    Console.WriteLine();
+                    try
+                    {
+                        session.Connect();
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Retry {retryTimes + 1}...");
+                        Thread.Sleep(1000);
+                    }
+                    retryTimes++;
+                }
+                if (!session.IsConnected)
+                {
+                    if (!string.IsNullOrEmpty(proxyData))
+                    {
+                        string[] arrP = proxyData.Split(':');
+                        ProxyType proxyType = (ProxyType)Enum.Parse(typeof(ProxyType), arrP[0]);
+                        string proxyHost = arrP[1];
+                        ushort proxyPort = ushort.Parse(arrP[2]);
+                        string proxyUsername = "";
+                        string proxyPassword = "";
+                        if (arrP.Length > 3)
+                            proxyUsername = arrP[3];
+                        if (arrP.Length > 4)
+                            proxyPassword = arrP[4];
+                        retryTimes = 0;
+                        Console.WriteLine($"Failed to connect! Retry with proxy {proxyHost}:{proxyPassword}...");
+                        try
+                        {
+                            session.Connect(proxyHost, proxyPort, proxyUsername, proxyPassword, proxyType);
+                        }
+                        catch
+                        {
+                            while (!session.IsConnected && retryTimes < 3)
+                            {
+                                Console.WriteLine();
+                                try
+                                {
+                                    session.Connect(proxyHost, proxyPort, proxyUsername, proxyPassword, proxyType);
+                                }
+                                catch
+                                {
+                                    Console.WriteLine($"Retry {retryTimes + 1}...");
+                                    Thread.Sleep(1000);
+                                }
+                                retryTimes++;
+                            }
+                            if (!session.IsConnected)
+                            {
+                                Console.WriteLine($"Failed to connect!");
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to connect!");
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

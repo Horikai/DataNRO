@@ -1,6 +1,10 @@
 name: Test Headless client
 on: 
   workflow_dispatch:
+    inputs:
+      DATA:
+        description: 'Data'
+        required: true
 
 jobs:
   build-and-test-headless-client:
@@ -27,4 +31,11 @@ jobs:
           cd Output
           .\DataNRO.exe
         env:
-          DATA: ${{ secrets.DATA }}
+          DATA: ${{ inputs.DATA }}
+      - name: Compress JSON file
+        run: Compress-Archive -Path Output\Data -DestinationPath Data.zip
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Data
+          path: Data.zip

@@ -1,5 +1,7 @@
-name: Test create and deploy pages
+name: Create and deploy pages
 on: 
+  schedule:
+    - cron: "0 0 * * *"
   workflow_dispatch:
 permissions:
   contents: read
@@ -10,6 +12,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  cronjob-based-github-action:
+    name: Cronjob based github action (Keep workflow alive)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
   create-pages:
     name: Create pages
     runs-on: windows-latest

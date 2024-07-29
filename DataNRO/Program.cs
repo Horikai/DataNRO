@@ -95,7 +95,7 @@ namespace DataNRO
             Console.WriteLine($"[{session.Host}:{session.Port}] Disconnect from {session.Host}:{session.Port} in 5s...");
             Thread.Sleep(5000);
             session.Disconnect();
-            Console.WriteLine($"[{session.Host}:{session.Port}] Writing data to {folderName}.json...");
+            Console.WriteLine($"[{session.Host}:{session.Port}] Writing data to {folderName}\\...");
             Formatting formatting = Formatting.Indented;
             File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.Maps)}.json", JsonConvert.SerializeObject(GameData.Maps, formatting));
             File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NpcTemplates)}.json", JsonConvert.SerializeObject(GameData.NpcTemplates, formatting));

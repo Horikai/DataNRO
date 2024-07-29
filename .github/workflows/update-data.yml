@@ -21,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: gautamkrishnar/keepalive-workflow@v2
+
   update-data:
     name: Update data
     runs-on: windows-latest

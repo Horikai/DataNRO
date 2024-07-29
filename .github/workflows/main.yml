@@ -44,6 +44,7 @@ jobs:
           .\DataNRO.exe
         env:
           DATA: ${{ secrets.DATA }}
+          PROXY: ${{ secrets.PROXY }}
 
       - name: Move JSON file to Page folder
         run: move Output/Data/* Page

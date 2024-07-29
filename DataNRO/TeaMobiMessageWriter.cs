@@ -64,13 +64,6 @@ namespace DataNRO
             session.SendMessage(message);
         }
 
-        public void GetResource(sbyte action)
-        {
-            MessageSend message = new MessageSend(-74);
-            message.WriteSByte(action);
-            session.SendMessage(message);
-        }
-
         public void ImageSource()
         {
             MessageSend message = new MessageSend(-111);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Newtonsoft.Json;
 using Starksoft.Net.Proxy;
@@ -93,15 +94,16 @@ namespace DataNRO
             }
             catch
             {
-                while (!session.IsConnected && retryTimes < 3)
+                while (!session.IsConnected)
                 {
-                    Console.WriteLine();
                     try
                     {
                         session.Connect();
                     }
                     catch
                     {
+                        if (retryTimes >= 3)
+                            break;
                         Console.WriteLine($"Retry {retryTimes + 1}...");
                         Thread.Sleep(1000);
                     }
@@ -122,22 +124,23 @@ namespace DataNRO
                         if (arrP.Length > 4)
                             proxyPassword = arrP[4];
                         retryTimes = 0;
-                        Console.WriteLine($"Failed to connect! Retry with proxy {proxyHost}:{proxyPort}...");
+                        Console.WriteLine($"Failed to connect! Retry with proxy {Regex.Replace(proxyHost, "[0-9]", "*")}:{proxyPort}...");
                         try
                         {
                             session.Connect(proxyHost, proxyPort, proxyUsername, proxyPassword, proxyType);
                         }
                         catch
                         {
-                            while (!session.IsConnected && retryTimes < 3)
+                            while (!session.IsConnected)
                             {
-                                Console.WriteLine();
                                 try
                                 {
                                     session.Connect(proxyHost, proxyPort, proxyUsername, proxyPassword, proxyType);
                                 }
                                 catch
                                 {
+                                    if (retryTimes >= 3)
+                                        break;
                                     Console.WriteLine($"Retry {retryTimes + 1}...");
                                     Thread.Sleep(1000);
                                 }

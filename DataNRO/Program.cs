@@ -27,7 +27,33 @@ namespace DataNRO
                     MessageWriter = new TeaMobiMessageWriter()
                 };
                 Console.WriteLine($"Connecting to {session.Host}:{session.Port}...");
-                session.Connect();
+                int retryTimes = 0;
+                try
+                {
+                    session.Connect();
+                }
+                catch
+                {
+                    while (!session.IsConnected && retryTimes < 10)
+                    {
+                        Console.WriteLine();
+                        try
+                        {
+                            session.Connect();
+                        }
+                        catch
+                        {
+                            Console.WriteLine($"Retry {retryTimes + 1}...");
+                            Thread.Sleep(1000);
+                        }
+                        retryTimes++;
+                    }
+                    if (!session.IsConnected)
+                    {
+                        Console.WriteLine("Failed to connect!");
+                        continue;
+                    }
+                }
                 Console.WriteLine("Connected successfully!");
                 IMessageWriter writer = session.MessageWriter;
                 writer.SetClientType();
@@ -69,6 +95,7 @@ namespace DataNRO
                     GameData.NClasses,
                     GameData.ItemTemplates
                 }, Formatting.None));
+                Thread.Sleep(3000);
             }
         }
     }

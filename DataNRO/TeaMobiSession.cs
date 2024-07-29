@@ -21,6 +21,7 @@ namespace DataNRO
                 messageWriter.SetSession(this);
             }
         }
+        public bool IsConnected => tcpClient.Connected;
 
         IMessageWriter messageWriter;
         Thread receiveThread;

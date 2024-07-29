@@ -46,7 +46,8 @@ namespace DataNRO
         public void Connect()
         {
             tcpClient = new TcpClient();
-            tcpClient.Connect(Host, Port);
+            if (!tcpClient.ConnectAsync(Host, Port).Wait(5000))
+                throw new TimeoutException($"Connection to {Host}:{Port} timeout");
             reader = new BinaryReader(tcpClient.GetStream(), Encoding.UTF8);
             writer = new BinaryWriter(tcpClient.GetStream(), Encoding.UTF8);
             sendThread = new Thread(SendDataThread);

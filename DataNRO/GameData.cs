@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DataNRO
 {
@@ -51,5 +52,15 @@ namespace DataNRO
         internal static NClass[] NClasses { get; set; }
         internal static Dictionary<int, string> Maps { get; set; } = new Dictionary<int, string>();
         internal static List<ItemTemplate> ItemTemplates { get; set; } = new List<ItemTemplate>();
+
+        internal static void Reset()
+        {
+            Maps = new Dictionary<int, string>();
+            NpcTemplates = null;
+            MobTemplates = null;
+            ItemOptionTemplates = null;
+            NClasses = null;
+            ItemTemplates = null;
+        }
     }
 }

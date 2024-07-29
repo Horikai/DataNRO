@@ -46,7 +46,7 @@ jobs:
           DATA: ${{ secrets.DATA }}
 
       - name: Move JSON file to Page folder
-        run: move Output\*.json Page
+        run: move Output/Data/* Page
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

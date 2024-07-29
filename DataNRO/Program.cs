@@ -8,30 +8,29 @@ namespace DataNRO
 {
     internal class Program
     {
-        static int threadCount;
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            if (!Directory.Exists("Data"))
+                Directory.CreateDirectory("Data");
             string[] datas = Environment.GetEnvironmentVariable("DATA").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string data in datas)
-            {
-                new Thread(() => LoginAndGetData(data)).Start();
-                threadCount++;
-                while (threadCount > 2)
-                    Thread.Sleep(1000);
-            }
+                LoginAndGetData(data);
         }
 
         static void LoginAndGetData(string data)
         {
+            GameData.Reset();
             string[] arr = data.Split('|');
             string host = arr[0];
             ushort port = ushort.Parse(arr[1]);
             string unregisteredUser = arr[2];
             string account = arr[3];
             string password = arr[4];
-            string fileName = arr[5];
+            string folderName = arr[5];
+            if (!Directory.Exists("Data\\" + folderName))
+                Directory.CreateDirectory("Data\\" + folderName);
             ISession session = new TeaMobiSession(host, port)
             {
                 MessageReceiver = new TeaMobiMessageReceiver(),
@@ -62,7 +61,6 @@ namespace DataNRO
                 if (!session.IsConnected)
                 {
                     Console.WriteLine("Failed to connect!");
-                    threadCount--;
                     return;
                 }
             }
@@ -94,20 +92,18 @@ namespace DataNRO
             writer.FinishLoadMap();
             Thread.Sleep(3000);
             writer.Chat("DataNRO by ElectroHeavenVN");
-            Console.WriteLine($"[{session.Host}:{session.Port}] Disconnect from {session.Host}:{session.Port} in 15s...");
-            Thread.Sleep(15000);
+            Console.WriteLine($"[{session.Host}:{session.Port}] Disconnect from {session.Host}:{session.Port} in 5s...");
+            Thread.Sleep(5000);
             session.Disconnect();
-            Console.WriteLine($"[{session.Host}:{session.Port}] Writing data to {fileName}.json...");
-            File.WriteAllText($"{fileName}.json", JsonConvert.SerializeObject(new
-            {
-                GameData.Maps,
-                GameData.NpcTemplates,
-                GameData.MobTemplates,
-                GameData.ItemOptionTemplates,
-                GameData.NClasses,
-                GameData.ItemTemplates
-            }, Formatting.None));
-            threadCount--;
+            Console.WriteLine($"[{session.Host}:{session.Port}] Writing data to {folderName}.json...");
+            Formatting formatting = Formatting.Indented;
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.Maps)}.json", JsonConvert.SerializeObject(GameData.Maps, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NpcTemplates)}.json", JsonConvert.SerializeObject(GameData.NpcTemplates, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.MobTemplates)}.json", JsonConvert.SerializeObject(GameData.MobTemplates, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.ItemOptionTemplates)}.json", JsonConvert.SerializeObject(GameData.ItemOptionTemplates, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NClasses)}.json", JsonConvert.SerializeObject(GameData.NClasses, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.ItemTemplates)}.json", JsonConvert.SerializeObject(GameData.ItemTemplates, formatting));
+            Thread.Sleep(3000);
         }
     }
 }

@@ -122,7 +122,7 @@ namespace DataNRO
                         if (arrP.Length > 4)
                             proxyPassword = arrP[4];
                         retryTimes = 0;
-                        Console.WriteLine($"Failed to connect! Retry with proxy {proxyHost}:{proxyPassword}...");
+                        Console.WriteLine($"Failed to connect! Retry with proxy {proxyHost}:{proxyPort}...");
                         try
                         {
                             session.Connect(proxyHost, proxyPort, proxyUsername, proxyPassword, proxyType);

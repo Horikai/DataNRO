@@ -27,14 +27,4 @@ jobs:
           cd Output
           .\DataNRO.exe
         env:
-          SERVER: ${{ secrets.server }}
-          PORT: ${{ secrets.port }}
-          USERAO: ${{ secrets.userAo }}
-          ACCOUNT: ${{ secrets.account }}
-          PASSWORD: ${{ secrets.password }}
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: Data-JSON
-          path: Output/Data.json
+          DATA: ${{ secrets.DATA }}

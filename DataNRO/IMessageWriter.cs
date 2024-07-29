@@ -13,5 +13,6 @@
         void Login(string username, string pass, sbyte type);
         void FinishUpdate();
         void FinishLoadMap();
+        void Chat(string text);
     }
 }

@@ -14,6 +14,13 @@ namespace DataNRO
             this.session = session;
         }
 
+        public void Chat(string text)
+        {
+            MessageSend message = new MessageSend(44);
+            message.WriteStringUTF(text);
+            session.SendMessage(message);
+        }
+
         public void UpdateMap()
         {
             MessageSend message = MessageNotMap(6);

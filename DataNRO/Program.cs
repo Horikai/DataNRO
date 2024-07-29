@@ -54,6 +54,8 @@ namespace DataNRO
                 writer.FinishUpdate();
                 Thread.Sleep(500);
                 writer.FinishLoadMap();
+                Thread.Sleep(3000);
+                writer.Chat("DataNRO by ElectroHeavenVN");
                 Console.WriteLine($"Disconnect from {session.Host}:{session.Port} in 15s...");
                 Thread.Sleep(15000);
                 session.Disconnect();

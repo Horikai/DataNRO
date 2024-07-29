@@ -34,14 +34,10 @@ jobs:
           cd Output
           .\DataNRO.exe
         env:
-          SERVER: ${{ secrets.server }}
-          PORT: ${{ secrets.port }}
-          USERAO: ${{ secrets.userAo }}
-          ACCOUNT: ${{ secrets.account }}
-          PASSWORD: ${{ secrets.password }}
+          DATA: ${{ secrets.DATA }}
 
-      - name: Move Data.json
-        run: move Output\Data.json Page\Data.json
+      - name: Move JSON file to Page folder
+        run: move Output\*.json Page
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

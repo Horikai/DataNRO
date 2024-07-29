@@ -1,0 +1,51 @@
+name: Update pages and deploy to GitHub Pages
+on: 
+  workflow_dispatch:
+  push:
+    paths:
+    - 'Page/**'
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  update-pages:
+    name: Update pages
+    runs-on: windows-latest
+    env:
+      SolutionPath: DataNRO/DataNRO.sln
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download artifact DataNRO
+        uses: dawidd6/action-download-artifact@v5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow_search: true
+          workflow_conclusion: success
+          if_no_artifact_found: fail
+          allow_forks: false
+          name: DataNRO
+          path: Page
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: Page
+
+  deploy:
+    name: Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: update-pages
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

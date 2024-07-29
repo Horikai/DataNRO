@@ -1,9 +1,11 @@
-name: Create and deploy pages
+name: Update data and deploy to GitHub Pages
 on: 
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
   push:
+    paths:
+    - 'DataNRO/**'
 permissions:
   contents: read
   pages: write
@@ -19,8 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: gautamkrishnar/keepalive-workflow@v2
-  create-pages:
-    name: Create pages
+  update-data:
+    name: Update data
     runs-on: windows-latest
     env:
       SolutionPath: DataNRO/DataNRO.sln
@@ -45,20 +47,27 @@ jobs:
         env:
           DATA: ${{ secrets.DATA }}
           PROXY: ${{ secrets.PROXY }}
-
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DataNRO
+          path: Output\Data
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
       - name: Move JSON file to Page folder
         run: move Output/Data/* Page
-      - name: Upload artifact
+      - name: Upload page artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: Page
 
   deploy:
+    name: Deploy to GitHub Pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: create-pages
+    needs: update-data
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

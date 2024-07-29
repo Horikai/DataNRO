@@ -65,8 +65,8 @@ jobs:
           path: Output\Data
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Move JSON file to Page folder
-        run: Move-Item -Path Output/Data/* -Destination Page -Force
+      - name: Copy JSON file to Page folder
+        run: Copy-Item -Path Output/Data/* -Destination Page -Recurse -Force
       - name: Upload page artifact
         uses: actions/upload-pages-artifact@v3
         with:

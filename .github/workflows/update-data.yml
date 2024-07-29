@@ -40,13 +40,6 @@ jobs:
         run: nuget restore $env:SolutionPath
       - name: Build the solution
         run: msbuild $env:SolutionPath /t:rebuild /p:Configuration=Release
-      - name: Run headless client
-        run: |
-          cd Output
-          .\DataNRO.exe
-        env:
-          DATA: ${{ secrets.DATA }}
-          PROXY: ${{ secrets.PROXY }}
       - name: Download artifact DataNRO
         uses: dawidd6/action-download-artifact@v5
         with:
@@ -57,7 +50,14 @@ jobs:
           allow_forks: false
           workflow: update-data.yml
           name: DataNRO
-          path: Page
+          path: Output\Data
+      - name: Run headless client
+        run: |
+          cd Output
+          .\DataNRO.exe
+        env:
+          DATA: ${{ secrets.DATA }}
+          PROXY: ${{ secrets.PROXY }}
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:

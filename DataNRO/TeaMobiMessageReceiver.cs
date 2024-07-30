@@ -133,7 +133,12 @@ namespace DataNRO
             message.ReadByte();
             int mapLength = message.ReadByte();
             for (int i = 0; i < mapLength; i++)
-                Maps.Add(i, message.ReadString());
+            {
+                Map map = new Map();
+                map.id = i;
+                map.name = message.ReadString();
+                Maps.Add(map);
+            }
             NpcTemplates = new NpcTemplate[message.ReadByte()];
             for (int i = 0; i < NpcTemplates.Length; i++)
             {

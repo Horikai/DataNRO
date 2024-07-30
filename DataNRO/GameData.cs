@@ -45,12 +45,17 @@ namespace DataNRO
             public long powRequire;
             public string moreInfo;
         }
+        public class Map
+        {
+            public int id;
+            public string name;
+        }
 
         internal static NpcTemplate[] NpcTemplates { get; set; }
         internal static MobTemplate[] MobTemplates { get; set; }
         internal static ItemOptionTemplate[] ItemOptionTemplates { get; set; }
         internal static NClass[] NClasses { get; set; }
-        internal static Dictionary<int, string> Maps { get; set; } = new Dictionary<int, string>();
+        internal static List<Map> Maps { get; set; } = new List<Map>();
         internal static List<ItemTemplate> ItemTemplates { get; set; } = new List<ItemTemplate>();
 
         internal static void Reset()
@@ -59,7 +64,7 @@ namespace DataNRO
             MobTemplates = null;
             ItemOptionTemplates = null;
             NClasses = null;
-            Maps = new Dictionary<int, string>();
+            Maps = new List<Map>();
             ItemTemplates = new List<ItemTemplate>();
         }
     }

@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using Starksoft.Net.Proxy;
-using static System.Collections.Specialized.BitVector32;
 
 namespace DataNRO
 {

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchContainer = `
                     <div class="search-container">
                         <input type="text" id="search-npc" placeholder="Tìm kiếm theo tên NPC...">
-                        <button onclick="searchData()">Tìm kiếm</button>
+                        <button>Tìm kiếm</button>
                     </div>`;
                 break;
             case 'nClasses':
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchContainer = `
                     <div class="search-container">
                         <input type="text" id="search-class" placeholder="Tìm kiếm theo tên lớp...">
-                        <button onclick="searchData()">Tìm kiếm</button>
+                        <button>Tìm kiếm</button>
                     </div>`;
                 break;
             case 'itemOptions':
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="search-container">
                         <input type="text" id="search-id" placeholder="Tìm kiếm theo số thứ tự...">
                         <input type="text" id="search-name" placeholder="Tìm kiếm theo tên...">
-                        <button onclick="searchData()">Tìm kiếm</button>
+                        <button>Tìm kiếm</button>
                     </div>`;
                 break;
             case 'maps':
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="search-container">
                         <input type="text" id="search-id" placeholder="Tìm kiếm theo số thứ tự...">
                         <input type="text" id="search-name" placeholder="Tìm kiếm theo tên...">
-                        <button onclick="searchData()">Tìm kiếm</button>
+                        <button>Tìm kiếm</button>
                     </div>`;
                 break;
         }
@@ -100,19 +100,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 tableData += `</tr></thead><tbody></tbody></table>`;
                 tableContainer.innerHTML = searchContainer + tableData;
+                if (searchContainer)
+                    tableContainer.querySelector('.search-container button').addEventListener('click', searchData);
                 displayData(data, page);
-
-                if (page === 'npcTemplates') {
-                    document.querySelector('#search-npc').addEventListener('input', searchData);
-                } else if (page === 'nClasses') {
-                    document.querySelector('#search-class').addEventListener('input', searchData);
-                } else if (page === 'itemOptions') {
-                    document.querySelector('#search-id').addEventListener('input', searchData);
-                    document.querySelector('#search-name').addEventListener('input', searchData);
-                } else if (page === 'maps') {
-                    document.querySelector('#search-id').addEventListener('input', searchData);
-                    document.querySelector('#search-name').addEventListener('input', searchData);
-                }
             })
             .catch(error => console.error('Error loading data:', error));
     }
@@ -156,10 +146,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         displayData(filteredData, document.querySelector('#page-title').innerText.toLowerCase().replace(' ', ''));
-
-        if (filteredData.length === 0) {
-            alert('No results found');
-        }
     }
 
     loadPageContent('itemTemplates');

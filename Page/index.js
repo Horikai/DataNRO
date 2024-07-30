@@ -70,14 +70,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>`;
                 break;
         }
-
         document.querySelector('#page-title').innerText = title;
         document.querySelector('#breadcrumb-active').innerText = breadcrumb;
-
-        fetchData(url, page);
+        
+        fetchData(url, page, searchContainer);
     }
 
-    function fetchData(url, page) {
+    function fetchData(url, page, searchContainer) {
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -100,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     tableData += `<th>${prop.charAt(0).toUpperCase() + prop.slice(1)}</th>`;
                 });
                 tableData += `</tr></thead><tbody></tbody></table>`;
-                tableContainer.innerHTML = tableData;
+                tableContainer.innerHTML = searchContainer + tableData;
                 displayData(data, page);
 
                 if (page === 'npcTemplates') {

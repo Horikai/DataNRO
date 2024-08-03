@@ -71,9 +71,9 @@ namespace DataNRO
             Thread.Sleep(500);
             writer.FinishLoadMap();
             Thread.Sleep(3000);
-            writer.Chat("DataNRO by ElectroHeavenVN");
-            Console.WriteLine($"[{session.Host}:{session.Port}] Disconnect from {session.Host}:{session.Port} in 5s...");
-            Thread.Sleep(5000);
+            //writer.Chat("DataNRO by ElectroHeavenVN");
+            Console.WriteLine($"[{session.Host}:{session.Port}] Disconnect from {session.Host}:{session.Port} in 10s...");
+            Thread.Sleep(10000);
             session.Disconnect();
             Console.WriteLine($"[{session.Host}:{session.Port}] Writing data to {folderName}\\...");
             Formatting formatting = Formatting.Indented;

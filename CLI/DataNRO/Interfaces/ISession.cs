@@ -1,11 +1,12 @@
-﻿using Starksoft.Net.Proxy;
+﻿using System;
+using Starksoft.Net.Proxy;
 
-namespace DataNRO
+namespace DataNRO.Interfaces
 {
-    internal interface ISession
+    public interface ISession : IDisposable
     {
-        IMessageReceiver MessageReceiver { get; set; }
-        IMessageWriter MessageWriter { get; set; }
+        IMessageReceiver MessageReceiver { get; }
+        IMessageWriter MessageWriter { get; }
         string Host { get; }
         ushort Port { get; }
         bool IsConnected { get; }
@@ -13,5 +14,7 @@ namespace DataNRO
         void Connect(string proxyHost, ushort proxyPort, string proxyUsername, string proxyPassword, ProxyType proxyType);
         void SendMessage(MessageSend message);
         void Disconnect();
+        GameData Data { get; }
+        Player Player { get; }
     }
 }

@@ -4,25 +4,20 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using DataNRO.Interfaces;
 using Starksoft.Net.Proxy;
 
-namespace DataNRO
+namespace DataNRO.TeaMobi
 {
-    internal class TeaMobiSession : ISession, IDisposable
+    public class TeaMobiSession : ISession
     {
         public string Host { get; }
         public ushort Port { get; }
-        public IMessageReceiver MessageReceiver { get; set; }
-        public IMessageWriter MessageWriter
-        {
-            get => messageWriter;
-            set
-            {
-                messageWriter = value;
-                messageWriter.SetSession(this);
-            }
-        }
-        public bool IsConnected => tcpClient.Connected;
+        public IMessageReceiver MessageReceiver { get; private set; }
+        public IMessageWriter MessageWriter { get; private set; }
+        public bool IsConnected => tcpClient == null ? false : tcpClient.Connected;
+        public GameData Data { get; } = new GameData();
+        public Player Player { get; } = new Player();
 
         IMessageWriter messageWriter;
         Thread receiveThread;
@@ -36,10 +31,12 @@ namespace DataNRO
         sbyte curR;
         sbyte curW;
 
-        internal TeaMobiSession(string host, ushort port)
+        public TeaMobiSession(string host, ushort port)
         {
             Host = host;
             Port = port;
+            MessageReceiver = new TeaMobiMessageReceiver(this);
+            MessageWriter = new TeaMobiMessageWriter(this);
         }
 
         public void Connect()
@@ -238,6 +235,7 @@ namespace DataNRO
         {
             Disconnect();
             tcpClient.Dispose();
+            Data.Reset();
         }
 
         sbyte ReadKey(sbyte b)

@@ -1,15 +1,16 @@
 ﻿using System;
 using System.IO;
+using DataNRO.Interfaces;
 
-namespace DataNRO
+namespace DataNRO.TeaMobi
 {
-    internal class TeaMobiMessageWriter : IMessageWriter
+    public class TeaMobiMessageWriter : IMessageWriter
     {
         static readonly string VERSION = "2.4.0";
 
         TeaMobiSession session;
 
-        public void SetSession(TeaMobiSession session)
+        public TeaMobiMessageWriter(TeaMobiSession session)
         {
             this.session = session;
         }
@@ -62,7 +63,7 @@ namespace DataNRO
             message.WriteBool(true);
             message.WriteBool(true);
             message.WriteStringUTF("Pc platform xxx|" + VERSION);
-            Stream stream = typeof(TeaMobiMessageWriter).Assembly.GetManifestResourceStream("DataNRO.Resources.info");
+            Stream stream = typeof(TeaMobiMessageWriter).Assembly.GetManifestResourceStream("DataNRO.TeaMobi.Resources.info");
             byte[] array = new byte[stream.Length];
             stream.Read(array, 0, array.Length);
             message.WriteShort((short)array.Length);

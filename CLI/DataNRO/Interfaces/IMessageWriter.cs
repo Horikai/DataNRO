@@ -1,8 +1,7 @@
-﻿namespace DataNRO
+﻿namespace DataNRO.Interfaces
 {
-    internal interface IMessageWriter
+    public interface IMessageWriter
     {
-        void SetSession(TeaMobiSession session);
         void UpdateMap();
         void UpdateItem();
         void UpdateSkill();

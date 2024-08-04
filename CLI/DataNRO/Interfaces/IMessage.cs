@@ -1,6 +1,6 @@
-﻿namespace DataNRO
+﻿namespace DataNRO.Interfaces
 {
-    internal interface IMessage
+    public interface IMessage
     {
         sbyte Command { get; }
         byte[] Buffer { get; }

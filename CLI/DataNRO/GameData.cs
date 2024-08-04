@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DataNRO
 {
-    internal static class GameData
+    public class GameData
     {
         public class NpcTemplate
         {
@@ -51,14 +50,14 @@ namespace DataNRO
             public string name;
         }
 
-        internal static NpcTemplate[] NpcTemplates { get; set; }
-        internal static MobTemplate[] MobTemplates { get; set; }
-        internal static ItemOptionTemplate[] ItemOptionTemplates { get; set; }
-        internal static NClass[] NClasses { get; set; }
-        internal static List<Map> Maps { get; set; } = new List<Map>();
-        internal static List<ItemTemplate> ItemTemplates { get; set; } = new List<ItemTemplate>();
+        public NpcTemplate[] NpcTemplates { get; set; }
+        public MobTemplate[] MobTemplates { get; set; }
+        public ItemOptionTemplate[] ItemOptionTemplates { get; set; }
+        public NClass[] NClasses { get; set; }
+        public List<Map> Maps { get; set; } = new List<Map>();
+        public List<ItemTemplate> ItemTemplates { get; set; } = new List<ItemTemplate>();
 
-        internal static void Reset()
+        public void Reset()
         {
             NpcTemplates = null;
             MobTemplates = null;

@@ -1,10 +1,18 @@
 ﻿using System;
+using DataNRO.Interfaces;
 using static DataNRO.GameData;
 
-namespace DataNRO
+namespace DataNRO.TeaMobi
 {
-    internal class TeaMobiMessageReceiver : IMessageReceiver
+    public class TeaMobiMessageReceiver : IMessageReceiver
     {
+        TeaMobiSession session;
+
+        internal TeaMobiMessageReceiver(TeaMobiSession session)
+        {
+            this.session = session;
+        }
+
         public void OnMessageReceived(MessageReceive message)
         {
             switch (message.Command)
@@ -39,8 +47,8 @@ namespace DataNRO
             {
                 string skillOptionTemplateName = message.ReadString();
             }
-            NClasses = new NClass[message.ReadByte()];
-            for (int i = 0; i < NClasses.Length; i++)
+            session.Data.NClasses = new NClass[message.ReadByte()];
+            for (int i = 0; i < session.Data.NClasses.Length; i++)
             {
                 NClass nClass = new NClass();
                 nClass.classId = i;
@@ -76,7 +84,7 @@ namespace DataNRO
                     }
                     nClass.skillTemplates[j] = skillTemplate;
                 }
-                NClasses[i] = nClass;
+                session.Data.NClasses[i] = nClass;
             }
         }
 
@@ -86,14 +94,14 @@ namespace DataNRO
             sbyte type = message.ReadSByte();
             if (type == 0)
             {
-                ItemOptionTemplates = new ItemOptionTemplate[message.ReadByte()];
-                for (int i = 0; i < ItemOptionTemplates.Length; i++)
+                session.Data.ItemOptionTemplates = new ItemOptionTemplate[message.ReadByte()];
+                for (int i = 0; i < session.Data.ItemOptionTemplates.Length; i++)
                 {
                     ItemOptionTemplate itemOptionTemplate = new ItemOptionTemplate();
                     itemOptionTemplate.id = i;
                     itemOptionTemplate.name = message.ReadString();
                     itemOptionTemplate.type = message.ReadSByte();
-                    ItemOptionTemplates[i] = itemOptionTemplate;
+                    session.Data.ItemOptionTemplates[i] = itemOptionTemplate;
                 }
             }
             else if (type == 1 || type == 2) 
@@ -115,7 +123,7 @@ namespace DataNRO
                     itemTemplate.iconID = message.ReadShort();
                     itemTemplate.part = message.ReadShort();
                     itemTemplate.isUpToUp = message.ReadBool();
-                    ItemTemplates.Add(itemTemplate);
+                    session.Data.ItemTemplates.Add(itemTemplate);
                 }
             }
             else if (type == 100)
@@ -137,10 +145,10 @@ namespace DataNRO
                 Map map = new Map();
                 map.id = i;
                 map.name = message.ReadString();
-                Maps.Add(map);
+                session.Data.Maps.Add(map);
             }
-            NpcTemplates = new NpcTemplate[message.ReadByte()];
-            for (int i = 0; i < NpcTemplates.Length; i++)
+            session.Data.NpcTemplates = new NpcTemplate[message.ReadByte()];
+            for (int i = 0; i < session.Data.NpcTemplates.Length; i++)
             {
                 NpcTemplate npcTemplate = new NpcTemplate();
                 npcTemplate.npcTemplateId = i;
@@ -155,10 +163,10 @@ namespace DataNRO
                     for (int k = 0; k < npcTemplate.menu[j].Length; k++)
                         npcTemplate.menu[j][k] = message.ReadString();
                 }
-                NpcTemplates[i] = npcTemplate;
+                session.Data.NpcTemplates[i] = npcTemplate;
             }
-            MobTemplates = new MobTemplate[message.ReadByte()];
-            for (sbyte i = 0; i < MobTemplates.Length; i++)
+            session.Data.MobTemplates = new MobTemplate[message.ReadByte()];
+            for (sbyte i = 0; i < session.Data.MobTemplates.Length; i++)
             {
                 MobTemplate mobTemplate = new MobTemplate();
                 mobTemplate.mobTemplateId = i;
@@ -168,7 +176,7 @@ namespace DataNRO
                 mobTemplate.rangeMove = message.ReadSByte();
                 mobTemplate.speed = message.ReadSByte();
                 mobTemplate.dartType = message.ReadSByte();
-                MobTemplates[i] = mobTemplate;
+                session.Data.MobTemplates[i] = mobTemplate;
             }
         }
     }

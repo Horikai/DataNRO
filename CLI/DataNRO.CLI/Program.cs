@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using DataNRO.Interfaces;
 using Newtonsoft.Json;
 using Starksoft.Net.Proxy;
 
@@ -26,21 +28,28 @@ namespace DataNRO
 
         static void LoginAndGetData(string data)
         {
-            GameData.Reset();
             string[] arr = data.Split('|');
-            string host = arr[0];
-            ushort port = ushort.Parse(arr[1]);
-            string unregisteredUser = arr[2];
-            string account = arr[3];
-            string password = arr[4];
-            string folderName = arr[5];
+            string type = arr[0];
+            string host = arr[1];
+            ushort port = ushort.Parse(arr[2]);
+            string unregisteredUser = arr[3];
+            string account = arr[4];
+            string password = arr[5];
+            string folderName = arr[6];
             if (!Directory.Exists("Data\\" + folderName))
                 Directory.CreateDirectory("Data\\" + folderName);
-            ISession session = new TeaMobiSession(host, port)
+            ISession session;
+            try
             {
-                MessageReceiver = new TeaMobiMessageReceiver(),
-                MessageWriter = new TeaMobiMessageWriter()
-            };
+                Assembly assembly = Assembly.LoadFrom($"DataNRO.{type}.dll");
+                session = (ISession)Activator.CreateInstance(assembly.GetType($"DataNRO.{type}.{type}Session"), new object[] { host, port });
+                Console.WriteLine($"Server type \"{type}\" has been loaded!");
+            }
+            catch
+            {
+                Console.WriteLine($"Server type \"{type}\" not found!");
+                return;
+            }
             Console.WriteLine($"Connecting to {session.Host}:{session.Port}...");
             if (!TryConnect(session))
                 return;
@@ -77,14 +86,15 @@ namespace DataNRO
             session.Disconnect();
             Console.WriteLine($"[{session.Host}:{session.Port}] Writing data to {folderName}\\...");
             Formatting formatting = Formatting.Indented;
-            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.Maps)}.json", JsonConvert.SerializeObject(GameData.Maps, formatting));
-            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NpcTemplates)}.json", JsonConvert.SerializeObject(GameData.NpcTemplates, formatting));
-            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.MobTemplates)}.json", JsonConvert.SerializeObject(GameData.MobTemplates, formatting));
-            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.ItemOptionTemplates)}.json", JsonConvert.SerializeObject(GameData.ItemOptionTemplates, formatting));
-            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NClasses)}.json", JsonConvert.SerializeObject(GameData.NClasses, formatting));
-            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.ItemTemplates)}.json", JsonConvert.SerializeObject(GameData.ItemTemplates, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.Maps)}.json", JsonConvert.SerializeObject(session.Data.Maps, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NpcTemplates)}.json", JsonConvert.SerializeObject(session.Data.NpcTemplates, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.MobTemplates)}.json", JsonConvert.SerializeObject(session.Data.MobTemplates, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.ItemOptionTemplates)}.json", JsonConvert.SerializeObject(session.Data.ItemOptionTemplates, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.NClasses)}.json", JsonConvert.SerializeObject(session.Data.NClasses, formatting));
+            File.WriteAllText($"Data\\{folderName}\\{nameof(GameData.ItemTemplates)}.json", JsonConvert.SerializeObject(session.Data.ItemTemplates, formatting));
             File.WriteAllText($"Data\\{folderName}\\LastUpdated", DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
             Thread.Sleep(3000);
+            session.Dispose();
         }
 
         static bool TryConnect(ISession session)

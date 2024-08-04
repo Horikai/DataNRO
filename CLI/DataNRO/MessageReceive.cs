@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using DataNRO.Interfaces;
 
 namespace DataNRO
 {
-    internal class MessageReceive : IMessage, IDisposable
+    public class MessageReceive : IMessage, IDisposable
     {
         byte[] buffer;
         sbyte cmd;
@@ -15,14 +16,14 @@ namespace DataNRO
         public long DataLength => buffer.GetLongLength(0);
         public long CurrentPosition => reader.BaseStream.Position;
 
-        internal MessageReceive(sbyte command, byte[] buffer)
+        public MessageReceive(sbyte command, byte[] buffer)
         {
             cmd = command;
             this.buffer = buffer;
             reader = new BinaryReader(new MemoryStream(buffer));
         }
 
-        internal MessageReceive(sbyte command, sbyte[] buffer)
+        public MessageReceive(sbyte command, sbyte[] buffer)
         {
             cmd = command;
             this.buffer = new byte[buffer.Length];
@@ -31,19 +32,19 @@ namespace DataNRO
             reader = new BinaryReader(new MemoryStream(this.buffer));
         }
 
-        internal bool ReadBool() => reader.ReadBoolean();
-        internal byte ReadByte() => reader.ReadByte();
-        internal sbyte ReadSByte() => reader.ReadSByte();
-        internal short ReadShort() => reader.ReadInt16BE();
-        internal ushort ReadUShort() => reader.ReadUInt16BE();
-        internal char ReadChar() => reader.ReadChar();
-        internal int ReadInt() => reader.ReadInt32BE();
-        internal uint ReadUInt() => reader.ReadUInt32BE();
-        internal long ReadLong() => reader.ReadInt64BE();
-        internal ulong ReadULong() => reader.ReadUInt64BE();
-        internal byte[] ReadBytes(int count) => reader.ReadBytes(count);
+        public bool ReadBool() => reader.ReadBoolean();
+        public byte ReadByte() => reader.ReadByte();
+        public sbyte ReadSByte() => reader.ReadSByte();
+        public short ReadShort() => reader.ReadInt16BE();
+        public ushort ReadUShort() => reader.ReadUInt16BE();
+        public char ReadChar() => reader.ReadChar();
+        public int ReadInt() => reader.ReadInt32BE();
+        public uint ReadUInt() => reader.ReadUInt32BE();
+        public long ReadLong() => reader.ReadInt64BE();
+        public ulong ReadULong() => reader.ReadUInt64BE();
+        public byte[] ReadBytes(int count) => reader.ReadBytes(count);
 
-        internal sbyte[] ReadSBytes(int count)
+        public sbyte[] ReadSBytes(int count)
         {
             byte[] data = reader.ReadBytes(count);
             sbyte[] result = new sbyte[count];
@@ -52,7 +53,7 @@ namespace DataNRO
             return result;
         }
 
-        internal string ReadString()
+        public string ReadString()
         {
             short length = ReadShort();
             byte[] data = reader.ReadBytes(length);

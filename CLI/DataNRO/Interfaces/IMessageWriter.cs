@@ -13,5 +13,8 @@
         void FinishUpdate();
         void FinishLoadMap();
         void Chat(string text);
+        void CharMove(int x, int y);
+        void RequestChangeMap();
+        void GetMapOffline();
     }
 }

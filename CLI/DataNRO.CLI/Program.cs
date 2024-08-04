@@ -80,7 +80,16 @@ namespace DataNRO
             Thread.Sleep(500);
             writer.FinishLoadMap();
             Thread.Sleep(3000);
-            //writer.Chat("DataNRO by ElectroHeavenVN");
+            Location location;
+            do
+            {
+                location = session.Player.location;
+            }
+            while (location == null || string.IsNullOrEmpty(location.mapName));
+            Console.WriteLine($"Current map: {location.mapName} [{location.mapId}], zone {location.zoneId}");
+            Thread.Sleep(1000);
+            TryGoOutsideIfAtHome(session);
+            writer.Chat("DataNRO by ElectroHeavenVN");
             Console.WriteLine($"[{session.Host}:{session.Port}] Disconnect from {session.Host}:{session.Port} in 10s...");
             Thread.Sleep(10000);
             session.Disconnect();
@@ -95,6 +104,41 @@ namespace DataNRO
             File.WriteAllText($"Data\\{folderName}\\LastUpdated", DateTime.UtcNow.ToString("O", CultureInfo.InvariantCulture));
             Thread.Sleep(3000);
             session.Dispose();
+        }
+
+        static void TryGoOutsideIfAtHome(ISession session)
+        {
+            IMessageWriter writer = session.MessageWriter;
+            Location location = session.Player.location;
+            while (location.mapId <= 23 && location.mapId >= 21)
+            {
+                Console.WriteLine("Go outside");
+                int x = 0, y = 336;
+                switch (location.mapId)
+                {
+                    case 21:
+                        x = 495;
+                        break;
+                    case 22:
+                        x = 205;
+                        break;
+                    case 23:
+                        x = 475;
+                        break;
+                }
+                writer.CharMove(x, y);
+                Thread.Sleep(200);
+                writer.CharMove(x, ++y);
+                Thread.Sleep(200);
+                writer.CharMove(x, --y);
+                Thread.Sleep(200);
+                writer.GetMapOffline();
+                Thread.Sleep(1000);
+                writer.FinishLoadMap();
+                Thread.Sleep(3000);
+                location = session.Player.location;
+                Console.WriteLine($"Current map: {location.mapName} [{location.mapId}], zone {location.zoneId}");
+            }
         }
 
         static bool TryConnect(ISession session)

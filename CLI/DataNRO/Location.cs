@@ -1,10 +1,8 @@
-﻿using static DataNRO.GameData;
-
-namespace DataNRO
+﻿namespace DataNRO
 {
     public class Location
     {
-        public Map map;
-        public int zoneId;
+        public int planetId, mapId, zoneId;
+        public string mapName;
     }
 }

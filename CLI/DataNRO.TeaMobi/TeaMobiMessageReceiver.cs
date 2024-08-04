@@ -36,6 +36,9 @@ namespace DataNRO.TeaMobi
                 case -26:
                     Console.WriteLine(message.ReadString());
                     break;
+                case -24:
+                    ReadCurrentMapInfo(message);
+                    break;
             }
         }
 
@@ -104,7 +107,7 @@ namespace DataNRO.TeaMobi
                     session.Data.ItemOptionTemplates[i] = itemOptionTemplate;
                 }
             }
-            else if (type == 1 || type == 2) 
+            else if (type == 1 || type == 2)
             {
                 short start = 0;
                 if (type == 2)
@@ -178,6 +181,20 @@ namespace DataNRO.TeaMobi
                 mobTemplate.dartType = message.ReadSByte();
                 session.Data.MobTemplates[i] = mobTemplate;
             }
+        }
+
+        void ReadCurrentMapInfo(MessageReceive message)
+        {
+            Player player = session.Player;
+            Location location = player.location = new Location();
+            location.mapId = message.ReadByte();
+            location.planetId = message.ReadSByte();
+            message.ReadSByte();
+            message.ReadSByte();
+            message.ReadSByte();
+            location.mapName = message.ReadString();
+            location.zoneId = message.ReadSByte();
+            //Who cares what the rest of the data is?
         }
     }
 }

@@ -101,6 +101,27 @@ namespace DataNRO.TeaMobi
             session.SendMessage(message);
         }
 
+        public void CharMove(int x, int y)
+        {
+            MessageSend message = new MessageSend(-7);
+            message.WriteByte(0);
+            message.WriteShort((short)x);
+            message.WriteShort((short)y);
+            session.SendMessage(message);
+        }
+
+        public void RequestChangeMap()
+        {
+            MessageSend message = new MessageSend(-23);
+            session.SendMessage(message);
+        }
+        
+        public void GetMapOffline()
+        {
+            MessageSend message = new MessageSend(-33);
+            session.SendMessage(message);
+        }
+
         MessageSend MessageNotMap(sbyte command)
         {
             MessageSend message = new MessageSend(-28);
@@ -114,6 +135,5 @@ namespace DataNRO.TeaMobi
             message.WriteSByte(command);
             return message;
         }
-
     }
 }

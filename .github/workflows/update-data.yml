@@ -57,6 +57,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'ElectroHeavenVN/DataNRO.HSNR'
+          submodules: 'true'
           token: ${{ secrets.DataNRO_HSNR_TOKEN }}
           path: HSNR
       - name: Restore DataNRO.HSNR

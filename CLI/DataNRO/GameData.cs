@@ -12,7 +12,8 @@ namespace DataNRO
         }
         public class MobTemplate
         {
-            public int mobTemplateId, rangeMove, speed, type, dartType, hp;
+            public int mobTemplateId, rangeMove, speed, type, dartType;
+            public long hp;
             public string name;
         }
         public class ItemOptionTemplate

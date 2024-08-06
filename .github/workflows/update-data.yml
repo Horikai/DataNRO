@@ -26,7 +26,8 @@ jobs:
     name: Update data
     runs-on: windows-latest
     env:
-      SolutionPath: CLI/DataNRO.sln
+      CLISolutionPath: CLI/DataNRO.sln
+      HSNRSolutionPath: HSNR/DataNRO.HSNR.sln
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,12 +35,12 @@ jobs:
         uses: microsoft/setup-msbuild@v2
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
-      - name: Restore the solution
-        run: msbuild $env:SolutionPath /t:restore /p:Configuration=Release
+      - name: Restore DataNRO
+        run: msbuild $env:CLISolutionPath /t:restore /p:Configuration=Release
       - name: Restore NuGet packages
-        run: nuget restore $env:SolutionPath
-      - name: Build the solution
-        run: msbuild $env:SolutionPath /t:rebuild /p:Configuration=Release
+        run: nuget restore $env:CLISolutionPath
+      - name: Build DataNRO.CLI
+        run: msbuild $env:CLISolutionPath /t:rebuild /p:Configuration=Release
       - name: Download artifact DataNRO
         uses: dawidd6/action-download-artifact@v5
         with:
@@ -51,6 +52,20 @@ jobs:
           workflow: update-data.yml
           name: DataNRO
           path: Output\Data
+
+      - name: Checkout DataNRO.HSNR
+        uses: actions/checkout@v4
+        with:
+          repository: 'ElectroHeavenVN/DataNRO.HSNR'
+          token: ${{ secrets.DataNRO_HSNR_TOKEN }}
+          path: HSNR
+      - name: Restore DataNRO.HSNR
+        run: msbuild $env:HSNRSolutionPath /t:restore /p:Configuration=Release
+      - name: Build DataNRO.HSNR
+        run: msbuild $env:HSNRSolutionPath /t:rebuild /p:Configuration=Release
+      - name: Move DataNRO.HSNR to Output
+        run: Move-Item -Path HSNR/Output/* -Destination Output -Recurse -Force
+
       - name: Run headless client
         run: |
           cd Output

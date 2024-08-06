@@ -65,7 +65,7 @@ jobs:
       - name: Build DataNRO.HSNR
         run: msbuild $env:HSNRSolutionPath /t:rebuild /p:Configuration=Release
       - name: Move DataNRO.HSNR to Output
-        run: Move-Item -Path HSNR/Output/* -Destination Output -Recurse -Force
+        run: Move-Item -Path HSNR/Output/DataNRO.HSNR.dll -Destination Output/DataNRO.HSNR.dll -Force
 
       - name: Run headless client
         run: |
